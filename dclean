@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# Get the list of all stopped containers
+containers=$(sudo docker ps -aq)
+
+# Remove containers if there are any
+if [ -n "$containers" ]; then
+  sudo docker container rm -f $containers
+else
+  echo "No stopped containers to remove."
+fi
+
+# Get the list of all Docker images
+images=$(sudo docker images -aq)
+
+# Remove images if there are any
+if [ -n "$images" ]; then
+  sudo docker image rm -f $images
+else
+  echo "No Docker images to remove."
+fi
+

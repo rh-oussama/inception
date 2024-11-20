@@ -1,0 +1,6 @@
+services:
+  nginx:
+    container_name: nginx
+    ports:
+      - 80:80
+    build: nginx

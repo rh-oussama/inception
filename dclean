@@ -20,3 +20,12 @@ else
   echo "No Docker images to remove."
 fi
 
+docker-compose down --remove-orphans -v
+
+volumes=$(sudo docker volume ls -q)
+if [ -n "$volumes" ]; then
+  sudo docker volume rm -f $volumes
+else
+  echo "No Docker volume to remove."
+fi
+

@@ -1,6 +1,40 @@
 services:
-  nginx:
-    container_name: nginx
+  # nginx:
+  #   container_name: nginx
+  #   ports:
+  #     - 8081:80
+  #   build: nginx
+  #   networks:
+  #     - inception_net
+  #   volumes:
+  #     - wp_files:/var/www/html
+  mariadb:
+    container_name: mariadb
     ports:
-      - 80:80
-    build: nginx
+      - 3306:3306
+    build: mariadb
+    networks:
+      - inception_net
+    volumes:
+      - db_files:/var/lib/mysql
+
+volumes:
+  wp_files:
+    name: wp_volume
+    driver: local
+    driver_opts:
+      type: none
+      device: ${BASE_PATH}/data/wordpress
+      o: bind
+  db_files:
+    name: db_volume
+    driver: local
+    driver_opts:
+      type: none
+      device: ${BASE_PATH}/data/mariadb
+      o: bind
+
+networks:
+  inception_net:
+    driver: bridge
+    name: inception_net

@@ -17,7 +17,7 @@ rm -rf wordpress latest.zip
 wp config create --dbname=$WP_DATABASE_NAME --dbuser=$WP_DATABASE_USER --dbpass=$WP_DATABASE_USER_PASSWORD --dbhost=mariadb
 
 # Install WordPress core with predefined site and admin details
-wp core install --url=$DOMAIN --title="$WP_TITLE" --admin_user=adminuser --admin_password=F7gH8sY1xZpQ! --admin_email=admin@zoho.com
+wp core install --url=$DOMAIN --title="$WP_TITLE" --admin_user=adminuser --admin_password=$WP_ADMIN_PASSWORD --admin_email=$WP_ADMIN_EMAIL
 
 # Create a standard subscriber user account
 wp user create "$WP_REGULAR_USER" "$WP_REGULAR_EMAIL" --role=subscriber --user_pass=$WP_REGULAR_PASSWORD

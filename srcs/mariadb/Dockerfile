@@ -22,6 +22,3 @@ RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 # Set the entrypoint script
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
-
-# Default command to run MariaDB
-# CMD ["sh"]

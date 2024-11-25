@@ -1,13 +1,13 @@
 services:
-  # wordpress:
-  #   container_name: wordpress
-  #   hostname: wordpress
-  #   image: inception-wordpress:latest
-  #   build: mariadb
-  #   networks:
-  #     - inception_net
-  #   volumes:
-  #     - wp_files:/var/www/html
+  wordpress:
+    container_name: wordpress
+    hostname: wordpress
+    image: inception-wordpress:latest
+    build: wordpress
+    networks:
+      - inception_net
+    volumes:
+      - wp_files:/var/www/html
 
   nginx:
     container_name: nginx

@@ -1,4 +1,3 @@
-# Use Alpine 3.18 as base image for a lightweight container
 FROM alpine:3.18
 
 # Install required packages

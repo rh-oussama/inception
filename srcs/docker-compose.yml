@@ -1,17 +1,32 @@
 services:
-  # nginx:
-  #   container_name: nginx
-  #   ports:
-  #     - 8081:80
-  #   build: nginx
+  # wordpress:
+  #   container_name: wordpress
+  #   hostname: wordpress
+  #   image: inception-wordpress:latest
+  #   build: mariadb
   #   networks:
   #     - inception_net
   #   volumes:
   #     - wp_files:/var/www/html
+
+  nginx:
+    container_name: nginx
+    hostname: nginx
+    image: inception-nginx:latest
+    build: nginx
+    ports:
+      - 8081:80
+    networks:
+      - inception_net
+    volumes:
+      - wp_files:/var/www/html
+
   mariadb:
     container_name: mariadb
-    ports:
-      - 3306:3306
+    hostname: mariadb
+    env_file:
+      - .env
+    image: inception-mariadb:latest
     build: mariadb
     networks:
       - inception_net

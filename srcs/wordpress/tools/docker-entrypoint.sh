@@ -13,6 +13,20 @@ unzip latest.zip
 mv wordpress/* . 
 rm -rf wordpress latest.zip
 
+
+# check if the mariadb service is up
+for i in $(seq 1 30000000); do
+	echo "waiting for mariadb"
+	nc -zv mariadb 3306 &>/dev/null && { 
+		break; 
+	}
+	sleep 5
+done
+
+nc -zv mariadb 3306 &>/dev/null || { exit 1; }
+
+
+
 # Create WordPress configuration file with database connection details
 wp config create --dbname=$WP_DATABASE_NAME --dbuser=$WP_DATABASE_USER --dbpass=$WP_DATABASE_USER_PASSWORD --dbhost=mariadb
 
@@ -22,4 +36,7 @@ wp core install --url=$DOMAIN --title="$WP_TITLE" --admin_user=adminuser --admin
 # Create a standard subscriber user account
 wp user create "$WP_REGULAR_USER" "$WP_REGULAR_EMAIL" --role=subscriber --user_pass=$WP_REGULAR_PASSWORD
 
-php-fpm82 -F
+exec php-fpm81 -F
+
+
+

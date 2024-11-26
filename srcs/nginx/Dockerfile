@@ -1,7 +1,14 @@
 FROM alpine:latest
 
-RUN apk update
-RUN apk upgrade
-RUN apk add nginx
+RUN apk update && \
+	 apk upgrade && \
+	 apk add nginx 
 
-CMD ["nginx", "-g", "daemon off;"]
+# COPY ["conf/default.conf", "/etc/nginx/http.d/default.conf"]
+COPY ["tools/docker-entrypoint.sh", "/usr/local/bin/"]
+
+# Ensure the entrypoint script is executable
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
+
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]

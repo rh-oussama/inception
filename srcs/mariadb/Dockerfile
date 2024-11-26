@@ -9,8 +9,10 @@ RUN apk update && \
 # Configure MySQL directories and permissions
 RUN mkdir -p /var/run/mysqld && \
     mkdir -p /var/lib/mysql && \
+	 mkdir -p /var/log/mysql && \
     chown -R mysql:mysql /var/run/mysqld && \
     chown -R mysql:mysql /var/lib/mysql && \
+	 chown -R mysql:mysql /var/log/mysql && \
     chmod 777 /var/run/mysqld
 
 # Copy custom entrypoint script

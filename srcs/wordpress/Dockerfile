@@ -1,11 +1,8 @@
 FROM alpine:3.18
 
 # Update and install necessary packages for WordPress and php-fpm
-RUN apk update && \
-	 apk upgrade && \
-	 apk add curl && \
-	 apk add php81 php81-fpm php81-mysqli php81-json php81-session php81-phar php81-mbstring && \
-	 mkdir -p /var/www/html
+RUN apk add --no-cache zip php php-fpm php-phar php-mysqli mariadb-client php82-mbstring php82-iconv php82-session
+
 
 # Set the working directory for the WordPress installation
 WORKDIR /var/www/html

@@ -1,42 +1,58 @@
 #!/bin/sh
 
-# Download the latest WordPress release
-curl -O https://wordpress.org/latest.zip
+# Download the latest WordPress release && WP-CLI
 
-# Download and install WP-CLI for command-line WordPress management
-curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
-chmod +x wp-cli.phar
-mv wp-cli.phar /bin/wp
+# Check if WP-CLI is installed
+if [ ! -f "/bin/wp" ]; then
+	echo "WP-CLI not found. Downloading and installing WP-CLI..."
+   curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar &>/dev/null
+	chmod +x wp-cli.phar
+	mv wp-cli.phar /bin/wp
+	echo "WP-CLI installed successfully!"
+else
+	echo "WP-CLI is already installed."
+fi
 
-# Extract WordPress files and clean up compressed archive
-unzip latest.zip
-mv wordpress/* . 
-rm -rf wordpress latest.zip
+# Check if WordPress is installed
+if [ ! -f "index.php" ]; then
+	echo "WordPress not found. Installing the latest version..." 
+	curl -O https://wordpress.org/latest.zip &>/dev/null
+	unzip latest.zip
+	mv wordpress/* .
+	rm -rf wordpress latest.zip
+	echo "WordPress installed successfully!"
+else
+	echo "WordPress is already installed."
+fi
 
 
-# check if the mariadb service is up
-for i in $(seq 1 30000000); do
-	echo "waiting for mariadb"
-	nc -zv mariadb 3306 &>/dev/null && { 
-		break; 
-	}
-	sleep 5
+# Check if MariaDB service is up
+for i in $(seq 1 30); do
+	if mariadb -h $DB_HOST -u "$WP_DATABASE_USER" -p"$WP_DATABASE_USER_PASSWORD" --connect_timeout=1 -e "SELECT 1;" &>/dev/null; then
+		break
+	fi
+	echo "Waiting for MariaDB database to be up."
+	sleep 1
 done
 
-nc -zv mariadb 3306 &>/dev/null || { exit 1; }
-
-
+if ! mariadb -h $DB_HOST -u "$WP_DATABASE_USER" -p"$WP_DATABASE_USER_PASSWORD" --connect_timeout=1 -e "SELECT 1;" &>/dev/null; then
+	echo "Error: MariaDB is not responding. Unable to establish connection."
+	exit 1
+fi
 
 # Create WordPress configuration file with database connection details
 wp config create --dbname=$WP_DATABASE_NAME --dbuser=$WP_DATABASE_USER --dbpass=$WP_DATABASE_USER_PASSWORD --dbhost=mariadb
 
 # Install WordPress core with predefined site and admin details
-wp core install --url=$DOMAIN --title="$WP_TITLE" --admin_user=adminuser --admin_password=$WP_ADMIN_PASSWORD --admin_email=$WP_ADMIN_EMAIL
+wp core install --url=$DOMAIN --title="$WP_TITLE" --admin_user=$WP_ADMIN_USER --admin_password=$WP_ADMIN_PASSWORD --admin_email=$WP_ADMIN_EMAIL
 
 # Create a standard subscriber user account
 wp user create "$WP_REGULAR_USER" "$WP_REGULAR_EMAIL" --role=subscriber --user_pass=$WP_REGULAR_PASSWORD
 
-exec php-fpm81 -F
+
+
+sleep 100000
+# exec php-fpm81 -F
 
 
 

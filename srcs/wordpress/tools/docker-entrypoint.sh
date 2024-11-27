@@ -49,10 +49,9 @@ wp core install --url=$DOMAIN --title="$WP_TITLE" --admin_user=$WP_ADMIN_USER --
 # Create a standard subscriber user account
 wp user create "$WP_REGULAR_USER" "$WP_REGULAR_EMAIL" --role=subscriber --user_pass=$WP_REGULAR_PASSWORD
 
+wp theme activate twentytwentyfour
 
-
-sleep 100000
-# exec php-fpm81 -F
+exec php-fpm81 -F
 
 
 

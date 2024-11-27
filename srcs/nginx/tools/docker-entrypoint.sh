@@ -7,7 +7,7 @@ for i in $(seq 1 100); do
 	nc -zv wordpress 9000 &>/dev/null && { 
 		break; 
 	}
-	sleep 10
+	sleep 1
 done
 
 echo "Starting nginx..."

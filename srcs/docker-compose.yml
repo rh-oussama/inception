@@ -13,19 +13,19 @@ services:
     depends_on:
       - mariadb
 
-  # nginx:
-  #   container_name: nginx
-  #   hostname: nginx
-  #   image: inception-nginx:latest
-  #   build: nginx
-  #   ports:
-  #     - 8081:80
-  #   networks:
-  #     - inception_net
-  #   volumes:
-  #     - wp_files:/var/www/html
-  #   depends_on:
-  #     - wordpress
+  nginx:
+    container_name: nginx
+    hostname: nginx
+    image: inception-nginx:latest
+    build: nginx
+    ports:
+      - 80:80
+    networks:
+      - inception_net
+    volumes:
+      - wp_files:/var/www/html
+    depends_on:
+      - wordpress
 
   mariadb:
     container_name: mariadb

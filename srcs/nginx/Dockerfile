@@ -1,13 +1,16 @@
+# Use Alpine Linux as the base image
 FROM alpine:latest
 
 RUN apk update && \
-	 apk upgrade && \
-	 apk add nginx 
+    apk upgrade && \
+    apk add nginx
 
-# COPY ["conf/default.conf", "/etc/nginx/http.d/default.conf"]
+RUN mkdir -p /var/www/html && \
+    chown -R nginx:nginx /var/www/html && \
+    chmod 755 /var/www/html
+
 COPY ["tools/docker-entrypoint.sh", "/usr/local/bin/"]
-
-# Ensure the entrypoint script is executable
+COPY ["conf/default.conf", "/etc/nginx/http.d"]
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 

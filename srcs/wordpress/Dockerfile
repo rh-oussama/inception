@@ -19,7 +19,7 @@ WORKDIR /var/www/html
 
 
 # Copy configuration files
-# COPY ["conf/www.conf", "/etc/php81/php-fpm.d/www.conf"]
+COPY ["conf/www.conf", "/etc/php81/php-fpm.d/www.conf"]
 COPY ["tools/docker-entrypoint.sh", "/usr/local/bin/"]
 
 # Ensure the entrypoint script is executable

@@ -1,8 +1,5 @@
 #!/bin/sh
 
-# Download the latest WordPress release && WP-CLI
-
-# Check if WP-CLI is installed
 if [ ! -f "/bin/wp" ]; then
 	echo "WP-CLI not found. Downloading and installing WP-CLI..."
    curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar &>/dev/null
@@ -13,7 +10,6 @@ else
 	echo "WP-CLI is already installed."
 fi
 
-# Check if WordPress is installed
 if [ ! -f "index.php" ]; then
 	echo "WordPress not found. Installing the latest version..." 
 	curl -O https://wordpress.org/latest.zip &>/dev/null
@@ -26,7 +22,6 @@ else
 fi
 
 
-# Check if MariaDB service is up
 for i in $(seq 1 30); do
 	if mariadb -h $DB_HOST -u "$WP_DATABASE_USER" -p"$WP_DATABASE_USER_PASSWORD" --connect_timeout=1 -e "SELECT 1;" &>/dev/null; then
 		break
@@ -40,13 +35,10 @@ if ! mariadb -h $DB_HOST -u "$WP_DATABASE_USER" -p"$WP_DATABASE_USER_PASSWORD" -
 	exit 1
 fi
 
-# Create WordPress configuration file with database connection details
 wp config create --dbname=$WP_DATABASE_NAME --dbuser=$WP_DATABASE_USER --dbpass=$WP_DATABASE_USER_PASSWORD --dbhost=mariadb
 
-# Install WordPress core with predefined site and admin details
 wp core install --url=$DOMAIN --title="$WP_TITLE" --admin_user=$WP_ADMIN_USER --admin_password=$WP_ADMIN_PASSWORD --admin_email=$WP_ADMIN_EMAIL
 
-# Create a standard subscriber user account
 wp user create "$WP_REGULAR_USER" "$WP_REGULAR_EMAIL" --role=subscriber --user_pass=$WP_REGULAR_PASSWORD
 
 wp theme activate twentytwentyfour

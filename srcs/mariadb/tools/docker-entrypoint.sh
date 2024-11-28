@@ -8,17 +8,14 @@ if [ $? -eq 0 ]; then
    exec mysqld --bind-address=0.0.0.0
 fi
 
-# Start MySQL in the background
 mysqld_safe >/dev/null &
 
-# Wait for MySQL to start
 for i in $(seq 1 30); do
 	echo "Waiting for MariaDB server..."
 	mariadb-admin ping &>/dev/null && break
 	sleep 1
 done
 
-# Secure MySQL installation
 echo "Securing MySQL installation..."
 mysql_secure_installation >/dev/null <<EOF
 		n
@@ -31,7 +28,6 @@ mysql_secure_installation >/dev/null <<EOF
 EOF
 echo "MySQL has been secured."
 
-# Create database and user
 echo "Creating database and user..."
 mysql -u root >/dev/null <<EOF
 		CREATE DATABASE IF NOT EXISTS $WP_DATABASE_NAME;
@@ -41,7 +37,6 @@ mysql -u root >/dev/null <<EOF
 EOF
 echo "Database and user created."
 
-# Shutdown and restart MySQL
 mysqladmin shutdown
 echo "Restarting MySQL..."
 exec mysqld --bind-address=0.0.0.0

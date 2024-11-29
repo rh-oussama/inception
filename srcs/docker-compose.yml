@@ -9,7 +9,7 @@ services:
     networks:
       - inception_net
     volumes:
-      - wp_files:/var/w ww/html
+      - wp_files:/var/www/html
     depends_on:
       - mariadb
   nginx:
@@ -37,17 +37,17 @@ services:
     volumes:
       - db_files:/var/lib/mysql
   # BONUS
-  redis:
-    container_name: mariadb
-    hostname: mariadb
-    env_file:
-      - .env
-    image: inception-mariadb:latest
-    build: mariadb
-    networks:
-      - inception_net
-    volumes:
-      - db_files:/var/lib/mysql
+  # redis:
+  #   container_name: mariadb
+  #   hostname: mariadb
+  #   env_file:
+  #     - .env
+  #   image: inception-mariadb:latest
+  #   build: mariadb
+  #   networks:
+  #     - inception_net
+  #   volumes:
+  #     - db_files:/var/lib/mysql
 
 volumes:
   wp_files:

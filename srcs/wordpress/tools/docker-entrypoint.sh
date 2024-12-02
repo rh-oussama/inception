@@ -43,18 +43,25 @@ wp user create "$WP_REGULAR_USER" "$WP_REGULAR_EMAIL" --role=subscriber --user_p
 
 wp theme activate twentytwentyfour
 
-
 bonus() {
-  chown -R nobody:nobody wp-content
-  wp config set FS_METHOD direct --type=constant
-  wp config set WP_REDIS_HOST 'redis' --type=constant
-  wp config set WP_REDIS_PORT 6379 --type=constant
-  wp config set WP_REDIS_PASSWORD "$REDIS_PASSWORD" --type=constant
-  wp config set WP_REDIS_SCHEME 'tcp' --type=constant
-  wp config set WP_REDIS_USE_FS_CACHE true --type=constant
-  wp plugin install redis-cache --activate
-  wp redis enable
+	chown -R nobody:nobody wp-content
+	wp config set FS_METHOD direct --type=constant
+  
+	wp config set WP_REDIS_HOST 'redis' --type=constant
+	wp config set WP_REDIS_PORT 6379 --type=constant
+	wp config set WP_REDIS_PASSWORD "$REDIS_PASSWORD" --type=constant
+	wp config set WP_REDIS_SCHEME 'tcp' --type=constant
+	wp config set WP_REDIS_USE_FS_CACHE true --type=constant
+  
+	wp config set WP_REDIS_PREFIX 'wp_redis_cache_' --type=constant
+	wp config set WP_CACHE_KEY_SALT 'wp_secure_redis_salt_1q!' --type=constant
+
+	wp plugin install redis-cache --activate
+	wp redis enable
 }
+
+bonus
+
 
 bonus
 exec php-fpm81 -F

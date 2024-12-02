@@ -63,6 +63,9 @@ mariadb:
 wordpress:
 	@sudo docker compose -f $(DOCKER_COMPOSE_FILE) exec wordpress sh
 
+redis:
+	@sudo docker compose -f $(DOCKER_COMPOSE_FILE) exec redis sh
+
 
 help:
 	@echo "Makefile targets:"

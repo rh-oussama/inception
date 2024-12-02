@@ -4,14 +4,18 @@ RUN apk update && \
     apk add --no-cache \
     curl \
     zip \
-    php \
+    php81 \
     mariadb-client \
-    php-fpm \
-    php-phar \
-    php-mysqli \
-    php-mbstring \
-    php-iconv \
-    php-session
+    php81-fpm \
+    php81-phar \
+    php81-mysqli \
+    php81-mbstring \
+    php81-iconv \
+    php81-session \
+    php81-tokenizer \
+	 php81-pecl-redis \
+	 php81-ctype
+
 
 WORKDIR /var/www/html
 

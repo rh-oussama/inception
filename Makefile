@@ -66,6 +66,9 @@ wordpress:
 redis:
 	@sudo docker compose -f $(DOCKER_COMPOSE_FILE) exec redis sh
 
+ftp:
+	@sudo docker compose -f $(DOCKER_COMPOSE_FILE) exec ftp sh
+
 
 help:
 	@echo "Makefile targets:"

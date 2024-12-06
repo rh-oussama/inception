@@ -43,11 +43,26 @@ services:
     env_file:
       - .env
     image: inception-redis:latest
-    build: ./bonus/redis
+    build: redis
     networks:
       - inception_net
     volumes:
       - wp_files:/var/www/html
+  ftp:
+    container_name: ftp
+    hostname: ftp
+    env_file:
+      - .env
+    image: inception-ftp:latest
+    build: ftp
+    ports:
+      - 21:21
+      - 30000-31000:30000-31000
+    networks:
+      - inception_net
+    volumes:
+      - wp_files:/var/www/html
+      - db_files:/var/lib/mysql
 
 volumes:
   wp_files:
@@ -69,3 +84,4 @@ networks:
   inception_net:
     driver: bridge
     name: inception_net
+  

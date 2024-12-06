@@ -23,14 +23,14 @@ fi
 
 
 for i in $(seq 1 30); do
-	if mariadb -h $DB_HOST -u "$WP_DATABASE_USER" -p"$WP_DATABASE_USER_PASSWORD" --connect_timeout=1 -e "SELECT 1;" &>/dev/null; then
+	if mariadb -h mariadb -u "$WP_DATABASE_USER" -p"$WP_DATABASE_USER_PASSWORD" --connect_timeout=1 -e "SELECT 1;" &>/dev/null; then
 		break
 	fi
 	echo "Waiting for MariaDB database to be up."
 	sleep 1
 done
 
-if ! mariadb -h $DB_HOST -u "$WP_DATABASE_USER" -p"$WP_DATABASE_USER_PASSWORD" --connect_timeout=1 -e "SELECT 1;" &>/dev/null; then
+if ! mariadb -h mariadb -u "$WP_DATABASE_USER" -p"$WP_DATABASE_USER_PASSWORD" --connect_timeout=1 -e "SELECT 1;" &>/dev/null; then
 	echo "Error: MariaDB is not responding. Unable to establish connection."
 	exit 1
 fi

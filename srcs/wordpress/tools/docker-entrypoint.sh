@@ -58,12 +58,13 @@ bonus() {
 
 	wp plugin install redis-cache --activate
 	wp redis enable
+	
+	## Adminer
+	wget https://github.com/vrana/adminer/releases/download/v4.8.1/adminer-4.8.1-en.php
 }
 
 bonus
 
-
-bonus
 exec php-fpm81 -F
 
 

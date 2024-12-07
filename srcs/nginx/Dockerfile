@@ -1,8 +1,9 @@
 FROM alpine:3.18
 
 RUN apk update && \
-	 apk upgrade && \
-	 apk add nginx openssl
+    apk upgrade &&\
+    apk add --no-cache \
+    nginx openssl
 
 RUN mkdir -p /etc/nginx/ssl && \
     chmod 700 /etc/nginx/ssl

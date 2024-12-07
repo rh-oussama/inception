@@ -25,6 +25,8 @@ RUN mkdir -p /var/www/html && \
 
 COPY ["tools/docker-entrypoint.sh", "/usr/local/bin/"]
 COPY ["conf/default.conf", "/etc/nginx/http.d"]
+COPY ["conf/resume.html", "/var/www/html/resume.html"]
+
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]

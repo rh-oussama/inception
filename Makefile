@@ -1,85 +1,73 @@
+ENV_FILE = ./srcs/.env
+LOGIN = $(shell grep -E '^LOGIN=' $(ENV_FILE) | sed 's/^LOGIN=//')
 DOCKER_COMPOSE_FILE = srcs/docker-compose.yml
-VOLUME_DIR = /home/orhaddao/data
+VOLUME_DIR = /home/$(LOGIN)
 
-all: build up
+RED     = \033[31m
+GREEN   = \033[32m
+YELLOW  = \033[33m
+CYAN    = \033[36m
+RESET   = \033[0m
+BOLD    = \033[1m
 
-build:
-	sudo mkdir -p /home/orhaddao/data/wordpress
-	sudo mkdir -p /home/orhaddao/data/mariadb
+all: check-root build up
+
+build: check-root
+	mkdir -p /home/$(LOGIN)/data/wordpress
+	mkdir -p /home/$(LOGIN)/data/mariadb
 	@echo "Building Docker images..."
-	@sudo docker compose -f $(DOCKER_COMPOSE_FILE) build
+	@docker compose -f $(DOCKER_COMPOSE_FILE) build || true
 
-up: build
+up: check-root build
 	@echo "Starting Docker containers..."
-	@sudo docker compose -f $(DOCKER_COMPOSE_FILE) up -d
+	@docker compose -f $(DOCKER_COMPOSE_FILE) up -d
 
-down:
+down: check-root
 	@echo "Stopping and removing containers..."
-	@sudo docker compose -f $(DOCKER_COMPOSE_FILE) down
+	@docker compose -f $(DOCKER_COMPOSE_FILE) down
 
-clean:
-	@echo "Cleaning up Docker containers"
-	@sudo docker compose -f $(DOCKER_COMPOSE_FILE) down
+
+clean: check-root
+	@echo -e "$(CYAN)$(BOLD)Step 0:$(RESET) $(YELLOW)Stopping all running Docker containers...$(RESET)"
+	@docker stop $$(docker ps -qa) 2>/dev/null || true
+	@echo -e "$(CYAN)$(BOLD)Step 1:$(RESET) $(YELLOW)Removing all stopped Docker containers...$(RESET)"
+	@docker rm $$(docker ps -qa) 2>/dev/null || true
 
 fclean: clean
-	@echo "Cleaning up Docker volumes"
-	@sudo docker compose -f $(DOCKER_COMPOSE_FILE) down --rmi all -v
-	@echo "Deleting target directory $(TARGET_DIR)..."
-	@sudo rm -rf $(VOLUME_DIR)
+	@echo -e "$(CYAN)$(BOLD)Step 2:$(RESET) $(YELLOW)Removing all Docker images...$(RESET)"
+	@docker rmi -f $$(docker images -qa) 2>/dev/null || true
+	@echo -e "$(CYAN)$(BOLD)Step 3:$(RESET) $(YELLOW)Removing all Docker volumes...$(RESET)"
+	@docker volume rm $$(docker volume ls -q) 2>/dev/null || true
+	@echo -e "$(CYAN)$(BOLD)Step 4:$(RESET) $(YELLOW)Removing all Docker networks...$(RESET)"
+	@docker network rm $$(docker network ls -q) 2>/dev/null || true
+	@echo -e "$(CYAN)$(BOLD)Step 6:$(RESET) $(YELLOW)Deleting target directory '$(VOLUME_DIR)'...$(RESET)"
+	@rm -rf $(VOLUME_DIR)/data || true
+	@echo -e "$(CYAN)$(BOLD)Step 5:$(RESET) $(GREEN)Docker cleanup complete!$(RESET)"
 
-# @echo "Cleaning up Docker images "
-# @sudo docker image rm -f $(sudo docker images -q)
-	
-
-logs:
+logs: check-root
 	@echo "Displaying Docker logs..."
-	@sudo docker compose -f $(DOCKER_COMPOSE_FILE) logs
+	@docker compose -f $(DOCKER_COMPOSE_FILE) logs
 
-stats:
+stats: check-root
 	@echo "Displaying Docker state..."
-	@sudo docker compose -f $(DOCKER_COMPOSE_FILE) stats
+	@docker compose -f $(DOCKER_COMPOSE_FILE) stats
 
-
-restart: down up
+restart: check-root down up
 	@echo "Restarting Docker containers..."
 
-ps:
+ps: check-root
 	@echo "Listing running Docker containers..."
-	@sudo docker compose -f $(DOCKER_COMPOSE_FILE) ps
+	@docker compose -f $(DOCKER_COMPOSE_FILE) ps
 
 
 attach:
 	@echo "Select a service to access its container terminal:"
-	@echo "  make nginx      - Attach to Nginx container"
-	@echo "  make mariadb    - Attach to MariaDB container"
-	@echo "  make wordpress  - Attach to WordPress container"
+	@echo " docker compose -f srcs/docker-compose.yml exec SERVICE_NAME sh"
 
-nginx:
-	@sudo docker compose -f $(DOCKER_COMPOSE_FILE) exec nginx sh
+check-root:
+	@if [ "$$(id -u)" -ne 0 ]; then \
+		echo -e "$(RED)Run the 'MAKE' as sudo$(RESET)"; \
+		exit 1; \
+	fi
 
-mariadb:
-	@sudo docker compose -f $(DOCKER_COMPOSE_FILE) exec mariadb sh
-
-wordpress:
-	@sudo docker compose -f $(DOCKER_COMPOSE_FILE) exec wordpress sh
-
-redis:
-	@sudo docker compose -f $(DOCKER_COMPOSE_FILE) exec redis sh
-
-ftp:
-	@sudo docker compose -f $(DOCKER_COMPOSE_FILE) exec ftp sh
-
-
-help:
-	@echo "Makefile targets:"
-	@echo "  all       - Build and start containers"
-	@echo "  build     - Build Docker images"
-	@echo "  up        - Start containers in detached mode"
-	@echo "  down      - Stop and remove containers"
-	@echo "  fclean    - Clean up containers, volumes, networks, and delete $(TARGET_DIR)"
-	@echo "  logs      - View Docker logs"
-	@echo "  restart   - Restart containers"
-	@echo "  ps        - List running containers"
-	@echo "  help      - Display this help message"
-
-.PHONY: all build up down fclean logs restart ps help nginx mariadb wordpress
+.PHONY: all build up down fclean clean logs restart ps check-root

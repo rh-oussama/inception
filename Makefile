@@ -12,7 +12,7 @@ BOLD    = \033[1m
 
 all: check-root build up
 
-build: check-root
+build: check-root domain-conf
 	mkdir -p /home/$(LOGIN)/data/wordpress
 	mkdir -p /home/$(LOGIN)/data/mariadb
 	@echo "Building Docker images..."
@@ -42,6 +42,7 @@ fclean: clean
 	@docker network rm $$(docker network ls -q) 2>/dev/null || true
 	@echo -e "$(CYAN)$(BOLD)Step 6:$(RESET) $(YELLOW)Deleting target directory '$(VOLUME_DIR)'...$(RESET)"
 	@rm -rf $(VOLUME_DIR)/data || true
+	@rm -rf inception.cert
 	@echo -e "$(CYAN)$(BOLD)Step 5:$(RESET) $(GREEN)Docker cleanup complete!$(RESET)"
 
 logs: check-root
@@ -70,4 +71,9 @@ check-root:
 		exit 1; \
 	fi
 
-.PHONY: all build up down fclean clean logs restart ps check-root
+domain-conf:
+	@echo "🌐 Configuring local domain mapping..."
+	@grep -E "${LOGIN}\.42\.fr" /etc/hosts || echo -e "\n127.0.0.1    ${LOGIN}.42.fr\n" >> /etc/hosts
+	@echo "✅ Local domain mapping successfully configured."
+
+.PHONY: all build up down fclean clean logs restart ps check-root domain-conf

@@ -1,0 +1,35 @@
+# User configuration
+LOGIN=exampleuser
+BASE_PATH=/home/${LOGIN}
+
+# mysql && wp Credentials
+MYSQL_ROOT_PASSWORD=exampleRootPassword123
+WP_DATABASE_NAME=example_db
+WP_DATABASE_USER=example_user
+WP_DATABASE_USER_PASSWORD=exampleUserPassword456
+
+# WordPress Admin User Credentials
+WP_ADMIN_USER=exampleadminuser
+WP_ADMIN_PASSWORD=adminPass123
+WP_ADMIN_EMAIL=admin@example.com
+
+# WordPress Regular User Credentials
+WP_REGULAR_USER=exampleuser
+WP_REGULAR_PASSWORD=regularUserPassword789
+WP_REGULAR_EMAIL=exampleuser@example.com
+
+# WordPress Regular User Configuration
+WP_TITLE=MyExampleSite
+DOMAIN=exampleuser.42.fr
+
+# BONUS
+
+# Redis Configuration
+REDIS_PASSWORD=exampleRedisPassword123
+
+# FTP Configuration
+FTP_USER=ftp_example
+FTP_PASSWORD=ftpPassword456
+
+# Portainer Configuration
+PORTAINER_PASSWORD=portainerPass1234

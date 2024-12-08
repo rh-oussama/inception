@@ -69,6 +69,9 @@ check-root:
 	@if [ "$$(id -u)" -ne 0 ]; then \
 		echo -e "$(RED)Run the 'MAKE' as sudo$(RESET)"; \
 		exit 1; \
+	elif [ ! -f ./srcs/.env ]; then \
+		echo -e "$(RED)Error: './srcs/.env' file does not exist$(RESET)"; \
+		exit 1; \
 	fi
 
 domain-conf:

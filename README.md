@@ -4,21 +4,19 @@
 The Inception project aims to expand your knowledge in system administration, focusing on Docker-based infrastructure setup. You will configure and virtualize multiple services in Docker containers.
 
 ## Table of Contents
-1. [Preamble](#preamble)
-2. [Introduction](#introduction)
-3. [General Guidelines](#general-guidelines)
-4. [Mandatory Part](#mandatory-part)
-5. [Bonus Part](#bonus-part)
-
----
-
-## Preamble
-This document outlines the requirements and guidelines for the Inception project, which involves setting up a system infrastructure using Docker.
+1. [Introduction](#introduction)
+2. [General Guidelines](#general-guidelines)
+3. [Mandatory Part](#mandatory-part)
+4. [Bonus Part](#bonus-part)
 
 ---
 
 ## Introduction
 This project aims to familiarize you with Docker in a system administration context. You will be required to set up a virtualized environment containing various services like NGINX, WordPress, MariaDB, and more, all running within their own Docker containers.
+<br/> <br/> <br/>
+<img src="./img/flowchart.png" alt="inception flowchart" width=85% height=85%>
+<br/> <br/>
+</p>
 
 ---
 
@@ -87,7 +85,7 @@ Enhance your infrastructure with additional services. The bonus part is only eva
    - Set up Adminer for easy database management.
 
 5. **Additional Services:**
-   - Add any other useful services of your choice (e.g., a monitoring service, security tools, etc.).
+   - Add any other useful services of your choice (e.g., a monitoring service portainer, security tools, etc.).
 
 ---
 
